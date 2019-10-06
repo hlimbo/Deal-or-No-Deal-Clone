@@ -15,7 +15,7 @@ public class InstructionalTextDisplay : MonoBehaviour
     // set the instructional text everytime player 
     // selects no deal
     // picks the initial suitcase to keep
-    public void SetCurrentText()
+    public void UpdateText()
     {
         if(instructionText != null)
         {

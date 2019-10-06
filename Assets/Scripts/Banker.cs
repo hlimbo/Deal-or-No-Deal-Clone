@@ -19,10 +19,13 @@ public class Banker : MonoBehaviour
     [SerializeField]
     private float averageMoneyAmount;
 
-    void Start()
+    private ChosenSuitcaseDisplay chosenSuitcase;
+
+    void Awake()
     {
         totalMoneyAmount = GameConstants.moneyAmounts.Sum();
         closedSuitcaseCount = GameConstants.SUITCASE_COUNT;
+        chosenSuitcase = FindObjectOfType<ChosenSuitcaseDisplay>();
     }
 
     public void DecrementSuitcaseCount()
@@ -49,7 +52,11 @@ public class Banker : MonoBehaviour
     {
         get
         {
-            averageMoneyAmount = closedSuitcaseCount > 0 ? totalMoneyAmount / closedSuitcaseCount : 0f;
+            // it shouldn't be 0f .. it should be the FULL amount contained in the suitcase the player selected to keep
+            averageMoneyAmount = closedSuitcaseCount > 0 ?
+                totalMoneyAmount / closedSuitcaseCount :
+                chosenSuitcase?.SuitcaseData?.moneyAmount ?? 0f;
+            
             return averageMoneyAmount;
         }
     }

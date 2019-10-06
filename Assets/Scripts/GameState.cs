@@ -12,6 +12,7 @@ public class GameState : ScriptableObject
     public float totalEarnings;
     public float currentBankerOffer;
     public byte totalSuitcasesOpened;
+    public bool isBankerPresentingAnOffer;
 
     public void GotoNextRound()
     {
@@ -27,5 +28,6 @@ public class GameState : ScriptableObject
         totalEarnings = 0;
         currentBankerOffer = 0;
         totalSuitcasesOpened = 0;
+        isBankerPresentingAnOffer = false;
     }
 }

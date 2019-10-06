@@ -16,8 +16,8 @@ public class ChosenSuitcaseDisplay : MonoBehaviour
             suitcaseMoneyAmount.text = suitcaseData.moneyAmount.ToString();
         }
     }
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         suitcaseNumber = transform.Find("Closed/Text")?.GetComponent<Text>();
         suitcaseMoneyAmount = transform.Find("Open/Image/Text")?.GetComponent<Text>();

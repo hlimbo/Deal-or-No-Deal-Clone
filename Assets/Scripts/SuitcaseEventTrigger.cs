@@ -14,33 +14,35 @@ public class SuitcaseEventTrigger : EventTrigger
     private Banker banker;
     private GameState gameState;
     private GameObject bankerOfferPanel;
-    private GameObject instructionalPanel;
+    private GameObject instructionPanel;
 
-    void Start()
+    void Awake()
     {
         suitcaseDisplay = GetComponent<SuitcaseDisplay>();
         image = transform.Find("Closed")?.GetComponent<Image>();
         highlightColors = Resources.Load<HighlightColors>("SuitcaseData/Colors");
-        if(image != null)
+        if (image != null)
         {
             originalColor = image.color;
         }
 
+        // external dependencies
         chosenSuitcase = FindObjectOfType<ChosenSuitcaseDisplay>();
         banker = FindObjectOfType<Banker>();
-        // I should move this logic somewhere else
         bankerOfferPanel = GameObject.Find("BankerOfferPanel");
-        //bankerOfferPanel.SetActive(false);
-        instructionalPanel = GameObject.Find("InstructionPanel");
+        instructionPanel = GameObject.Find("InstructionPanel");
         gameState = Resources.Load<GameState>("GameStateData");
         gameState.SetInitialState();
-
+    }
+    void Start()
+    {
     }
 
     public override void OnPointerEnter(PointerEventData data)
     {
         Debug.Log($"OnPointerEnter called: {gameObject.name}");
-        if (image != null)
+
+        if (image != null && !gameState.isBankerPresentingAnOffer)
         {
             image.color = highlightColors.hoverElement;
         }
@@ -49,7 +51,7 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerExit(PointerEventData data)
     {
         Debug.Log($"OnPointerExit called: {gameObject.name}");
-        if(image != null)
+        if(image != null && !gameState.isBankerPresentingAnOffer)
         {
             image.color = originalColor;
         }
@@ -58,7 +60,7 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerDown(PointerEventData data)
     {
         Debug.Log($"OnPointerDown called: {gameObject.name}");
-        if(image != null)
+        if(image != null && !gameState.isBankerPresentingAnOffer)
         {
             image.color = highlightColors.selectedElement;
         }
@@ -67,7 +69,7 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerUp(PointerEventData data)
     {
         Debug.Log($"OnPointerUp called: {gameObject.name}");
-        if(image != null)
+        if(image != null && !gameState.isBankerPresentingAnOffer)
         {
             image.color = originalColor;
         }
@@ -83,14 +85,12 @@ public class SuitcaseEventTrigger : EventTrigger
             chosenSuitcase.SuitcaseData = suitcaseDisplay.suitcase;
             suitcaseDisplay.gameObject.SetActive(false);
             gameState.isPickingFirstSuitcase = false;
-
-            banker.DecrementSuitcaseCount();
-            banker.ReduceTotalMoneyAmount(suitcaseDisplay.suitcase.moneyAmount);
+            instructionPanel.GetComponent<InstructionalTextDisplay>().UpdateText();
         }
         else
         {
             // Open Suitcase Event
-            if (suitcaseDisplay.transform.Find("Closed").gameObject.activeInHierarchy)
+            if (!gameState.isBankerPresentingAnOffer && suitcaseDisplay.transform.Find("Closed").gameObject.activeInHierarchy)
             {
                 banker.DecrementSuitcaseCount();
                 banker.ReduceTotalMoneyAmount(suitcaseDisplay.suitcase.moneyAmount);
@@ -100,14 +100,14 @@ public class SuitcaseEventTrigger : EventTrigger
                 ++gameState.totalSuitcasesOpened;
             }
 
-            if (GameConstants.casesToOpenPerRound[gameState.currentRoundNumber] <= gameState.currentSuitcasesOpenedCount)
+            if (!gameState.isBankerPresentingAnOffer && GameConstants.casesToOpenPerRound[gameState.currentRoundNumber] <= gameState.currentSuitcasesOpenedCount)
             {
                 // Present Banker Offer Event
-                // open banker offer prompt that contains deal AND no deal buttons
-                gameState.currentBankerOffer = banker.CalculateOffer(0.15f);
+                gameState.currentBankerOffer = banker.CalculateOffer(GameConstants.bankerOfferPercentagesPerRound[gameState.currentRoundNumber]);
+                gameState.isBankerPresentingAnOffer = true;
                 bankerOfferPanel.SetActive(true);
                 bankerOfferPanel.GetComponent<BankerOffer>().SetOfferValueText();
-                instructionalPanel.SetActive(false);
+                instructionPanel.SetActive(false);
             }
         }
     }

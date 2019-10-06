@@ -8,43 +8,53 @@ public class BankerOffer : MonoBehaviour
     private GameObject instructionPanel;
     private ChosenSuitcaseDisplay chosenSuitcase;
     private Text offerValue;
-    void Start()
+    void Awake()
     {
         gameState = Resources.Load<GameState>("GameStateData");
         offerValue = transform.Find("OfferValue")?.GetComponent<Text>();
         gameOverPanel = GameObject.Find("GameOverPanel");
-        gameOverPanel.SetActive(false);
         instructionPanel = GameObject.Find("InstructionPanel");
         chosenSuitcase = FindObjectOfType<ChosenSuitcaseDisplay>();
+    }
+    void Start()
+    {
+        gameOverPanel.SetActive(false);
+        gameObject.SetActive(false);
     }
     public void Deal()
     {
         chosenSuitcase.transform.Find("Closed").gameObject.SetActive(false);
+        gameObject.SetActive(false);
         gameOverPanel.SetActive(true);
+        gameState.totalEarnings = gameState.currentBankerOffer;
+        gameOverPanel.transform.Find("EarningsText").GetComponent<Text>().text = $"You Won {gameState.totalEarnings.ToString("C")}";
+        gameState.isBankerPresentingAnOffer = false;
     }
 
     public void NoDeal()
     {
-        if(gameState.totalSuitcasesOpened < GameConstants.SUITCASE_COUNT - 1)
+        gameState.isBankerPresentingAnOffer = false;
+        if (gameState.totalSuitcasesOpened < GameConstants.SUITCASE_COUNT - 1)
         {
             gameState.GotoNextRound();
             gameObject.SetActive(false);
             instructionPanel.SetActive(true);
-            instructionPanel.GetComponent<InstructionalTextDisplay>().SetCurrentText();
+            instructionPanel.GetComponent<InstructionalTextDisplay>().UpdateText();
         }
         else
         {
             gameObject.SetActive(false);
             gameOverPanel.SetActive(true);
             chosenSuitcase.transform.Find("Closed").gameObject.SetActive(false);
+            gameState.totalEarnings = chosenSuitcase.SuitcaseData.moneyAmount;
+            gameOverPanel.transform.Find("EarningsText").GetComponent<Text>().text = $"You Won {gameState.totalEarnings.ToString("C")}";
         }
-
     }
 
     public void SetOfferValueText()
     {
         if (offerValue != null)
-            offerValue.text = $"${gameState.currentBankerOffer}";
+            offerValue.text = $"{gameState.currentBankerOffer.ToString("C")}";
     }
 
 }

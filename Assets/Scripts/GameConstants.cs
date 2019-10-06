@@ -48,4 +48,18 @@ public static class GameConstants
         { 10, 1 }
     };
 
+    // key = round number | value = percentage banker is willing to offer to player from average money amount left in play
+    public static readonly Dictionary<int, float> bankerOfferPercentagesPerRound = new Dictionary<int, float>()
+    {
+        { 1, 0.15f },
+        { 2, 0.15f },
+        { 3, 0.3f },
+        { 4, 0.4f },
+        { 5, 0.5f },
+        { 6, 0.6f },
+        { 7, 0.65f },
+        { 8, 0.75f },
+        { 9, 0.85f },
+        { 10, 0.9f }
+    };
 }
