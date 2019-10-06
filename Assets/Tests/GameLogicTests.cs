@@ -7,9 +7,8 @@ using UnityEngine.TestTools;
 
 namespace Tests
 {
-    public class MoneyArrangerTest
+    public class GameLogicTests
     {
-        // A Test behaves as an ordinary method
         [UnityTest]
         public IEnumerator VerifyMoneyAmountsAssignedAreUnique()
         {
@@ -43,6 +42,47 @@ namespace Tests
             string errorMsg = sb.ToString();
             Assert.IsTrue(allSuitcasesHaveUniqueMoneyValues, errorMsg);
             yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator VerifyBankerCalculatesInitialAverageCorrectly()
+        {
+            GameObject obj = new GameObject();
+            obj.AddComponent<Banker>();
+            Banker banker = obj.GetComponent<Banker>();
+            yield return null;
+            float expectedAverageMoneyAmount = banker.TotalMoneyAmount / banker.ClosedSuitcaseCount;
+            Assert.AreEqual(expectedAverageMoneyAmount, banker.AverageMoneyAmount, 0.001f);
+        }
+
+        [UnityTest]
+        public IEnumerator VerifyBankerCalculatesAverageWhenSuitcaseCountIsZero()
+        {
+            GameObject obj = new GameObject();
+            obj.AddComponent<Banker>();
+            Banker banker = obj.GetComponent<Banker>();
+            yield return null;
+            for(int i = 0;i < GameConstants.SUITCASE_COUNT; ++i)
+            {
+                banker.DecrementSuitcaseCount();
+            }
+
+            Assert.AreEqual(0, banker.ClosedSuitcaseCount);
+            Assert.AreEqual(0f, banker.AverageMoneyAmount, 0.001f);
+        }
+
+        [UnityTest]
+        public IEnumerator VerifyBankerUpdatesTotalMoneyAmountCorrectly()
+        {
+            GameObject obj = new GameObject();
+            obj.AddComponent<Banker>();
+            Banker banker = obj.GetComponent<Banker>();
+            yield return null;
+
+            float expectedTotalMoneyAmount = banker.TotalMoneyAmount - 100000;
+            banker.ReduceTotalMoneyAmount(100000);
+            Assert.AreEqual(expectedTotalMoneyAmount, banker.TotalMoneyAmount);
+            
         }
     }
 }
