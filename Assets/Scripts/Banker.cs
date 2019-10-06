@@ -9,7 +9,6 @@ using UnityEngine;
  * 1. Keep track of which suitcases were revealed
  * 2. calculate the average prize pool value
  * 3. calculate offer to make to player
- * 4. keep track of number of suitcases to open per round AND keep track of rounds player played so far
  */
 public class Banker : MonoBehaviour
 {

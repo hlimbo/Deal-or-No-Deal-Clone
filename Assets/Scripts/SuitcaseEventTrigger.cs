@@ -8,11 +8,14 @@ public class SuitcaseEventTrigger : EventTrigger
     private SuitcaseDisplay suitcaseDisplay;
     private Color originalColor;
     private Image image;
-    private static bool isPickingFirstSuitcase = true;
 
     // External Dependencies
     private ChosenSuitcaseDisplay chosenSuitcase;
     private Banker banker;
+    private GameState gameState;
+    private GameObject bankerOfferPanel;
+    private GameObject instructionalPanel;
+
     void Start()
     {
         suitcaseDisplay = GetComponent<SuitcaseDisplay>();
@@ -25,6 +28,13 @@ public class SuitcaseEventTrigger : EventTrigger
 
         chosenSuitcase = FindObjectOfType<ChosenSuitcaseDisplay>();
         banker = FindObjectOfType<Banker>();
+        // I should move this logic somewhere else
+        bankerOfferPanel = GameObject.Find("BankerOfferPanel");
+        //bankerOfferPanel.SetActive(false);
+        instructionalPanel = GameObject.Find("InstructionPanel");
+        gameState = Resources.Load<GameState>("GameStateData");
+        gameState.SetInitialState();
+
     }
 
     public override void OnPointerEnter(PointerEventData data)
@@ -66,25 +76,39 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerClick(PointerEventData data)
     {
         Debug.Log($"OnPointerClick called: {gameObject.name}");
-        if (isPickingFirstSuitcase)
+        if (gameState.isPickingFirstSuitcase)
         {
+            // Select Initial Suitcase Event
             // initialize chosen suitcase with valid number and money amount
             chosenSuitcase.SuitcaseData = suitcaseDisplay.suitcase;
             suitcaseDisplay.gameObject.SetActive(false);
-            isPickingFirstSuitcase = false;
+            gameState.isPickingFirstSuitcase = false;
 
             banker.DecrementSuitcaseCount();
             banker.ReduceTotalMoneyAmount(suitcaseDisplay.suitcase.moneyAmount);
-            banker.CalculateOffer(0.15f);
         }
         else
         {
-            banker.DecrementSuitcaseCount();
-            banker.ReduceTotalMoneyAmount(suitcaseDisplay.suitcase.moneyAmount);
-            banker.CalculateOffer(0.15f);
+            // Open Suitcase Event
+            if (suitcaseDisplay.transform.Find("Closed").gameObject.activeInHierarchy)
+            {
+                banker.DecrementSuitcaseCount();
+                banker.ReduceTotalMoneyAmount(suitcaseDisplay.suitcase.moneyAmount);
+                // reveal money amount suitcase contained
+                suitcaseDisplay.transform.Find("Closed").gameObject.SetActive(false);
+                ++gameState.currentSuitcasesOpenedCount;
+                ++gameState.totalSuitcasesOpened;
+            }
 
-            // reveal money amount suitcase contained
-            suitcaseDisplay.transform.Find("Closed").gameObject.SetActive(false);
+            if (GameConstants.casesToOpenPerRound[gameState.currentRoundNumber] <= gameState.currentSuitcasesOpenedCount)
+            {
+                // Present Banker Offer Event
+                // open banker offer prompt that contains deal AND no deal buttons
+                gameState.currentBankerOffer = banker.CalculateOffer(0.15f);
+                bankerOfferPanel.SetActive(true);
+                bankerOfferPanel.GetComponent<BankerOffer>().SetOfferValueText();
+                instructionalPanel.SetActive(false);
+            }
         }
     }
 }

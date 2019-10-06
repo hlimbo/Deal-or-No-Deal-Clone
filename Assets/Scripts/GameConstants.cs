@@ -1,4 +1,5 @@
-﻿public static class GameConstants
+﻿using System.Collections.Generic;
+public static class GameConstants
 {
     public const int SUITCASE_COUNT = 26;
     public static readonly float[] moneyAmounts = new float[SUITCASE_COUNT]
@@ -30,4 +31,21 @@
         750000f,
         1000000f
     };
+
+    public const int MAX_ROUND_COUNT = 10;
+    // key = round number | value = number of cases to open
+    public static readonly Dictionary<int, int> casesToOpenPerRound = new Dictionary<int, int>()
+    {
+        { 1, 6 },
+        { 2, 5 },
+        { 3, 4 },
+        { 4, 3 },
+        { 5, 2 },
+        { 6, 1 },
+        { 7, 1 },
+        { 8, 1 },
+        { 9, 1 },
+        { 10, 1 }
+    };
+
 }
