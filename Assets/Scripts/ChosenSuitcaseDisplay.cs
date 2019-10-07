@@ -13,7 +13,7 @@ public class ChosenSuitcaseDisplay : MonoBehaviour
         {
             suitcaseData = value;
             suitcaseNumber.text = suitcaseData.number.ToString();
-            suitcaseMoneyAmount.text = suitcaseData.moneyAmount.ToString();
+            suitcaseMoneyAmount.text = suitcaseData.moneyAmount.ToString("C");
         }
     }
 

@@ -29,6 +29,7 @@ public class BankerOffer : MonoBehaviour
         gameState.totalEarnings = gameState.currentBankerOffer;
         gameOverPanel.transform.Find("EarningsText").GetComponent<Text>().text = $"You Won {gameState.totalEarnings.ToString("C")}";
         gameState.isBankerPresentingAnOffer = false;
+        gameState.isGameOver = true;
     }
 
     public void NoDeal()
@@ -48,6 +49,7 @@ public class BankerOffer : MonoBehaviour
             chosenSuitcase.transform.Find("Closed").gameObject.SetActive(false);
             gameState.totalEarnings = chosenSuitcase.SuitcaseData.moneyAmount;
             gameOverPanel.transform.Find("EarningsText").GetComponent<Text>().text = $"You Won {gameState.totalEarnings.ToString("C")}";
+            gameState.isGameOver = true;
         }
     }
 

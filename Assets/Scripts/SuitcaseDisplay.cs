@@ -13,6 +13,6 @@ public class SuitcaseDisplay : MonoBehaviour
         suitcaseNumber = transform.Find("Closed/Text")?.GetComponent<Text>();
         suitcaseMoneyAmount = transform.Find("Open/Image/Text")?.GetComponent<Text>();
         if (suitcaseNumber != null) suitcaseNumber.text = suitcase.number.ToString();
-        if (suitcaseMoneyAmount != null) suitcaseMoneyAmount.text = suitcase.moneyAmount.ToString();
+        if (suitcaseMoneyAmount != null) suitcaseMoneyAmount.text = suitcase.moneyAmount.ToString("C");
     }
 }

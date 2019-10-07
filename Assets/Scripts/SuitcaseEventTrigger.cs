@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -15,6 +16,7 @@ public class SuitcaseEventTrigger : EventTrigger
     private GameState gameState;
     private GameObject bankerOfferPanel;
     private GameObject instructionPanel;
+    private GameObject scoreboardPanel;
 
     void Awake()
     {
@@ -31,6 +33,7 @@ public class SuitcaseEventTrigger : EventTrigger
         banker = FindObjectOfType<Banker>();
         bankerOfferPanel = GameObject.Find("BankerOfferPanel");
         instructionPanel = GameObject.Find("InstructionPanel");
+        scoreboardPanel = GameObject.Find("Scoreboard");
         gameState = Resources.Load<GameState>("GameStateData");
         gameState.SetInitialState();
     }
@@ -42,7 +45,7 @@ public class SuitcaseEventTrigger : EventTrigger
     {
         Debug.Log($"OnPointerEnter called: {gameObject.name}");
 
-        if (image != null && !gameState.isBankerPresentingAnOffer)
+        if (image != null && !gameState.isBankerPresentingAnOffer && !gameState.isGameOver)
         {
             image.color = highlightColors.hoverElement;
         }
@@ -51,7 +54,7 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerExit(PointerEventData data)
     {
         Debug.Log($"OnPointerExit called: {gameObject.name}");
-        if(image != null && !gameState.isBankerPresentingAnOffer)
+        if(image != null && !gameState.isBankerPresentingAnOffer && !gameState.isGameOver)
         {
             image.color = originalColor;
         }
@@ -60,7 +63,7 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerDown(PointerEventData data)
     {
         Debug.Log($"OnPointerDown called: {gameObject.name}");
-        if(image != null && !gameState.isBankerPresentingAnOffer)
+        if(image != null && !gameState.isBankerPresentingAnOffer && !gameState.isGameOver)
         {
             image.color = highlightColors.selectedElement;
         }
@@ -69,7 +72,7 @@ public class SuitcaseEventTrigger : EventTrigger
     public override void OnPointerUp(PointerEventData data)
     {
         Debug.Log($"OnPointerUp called: {gameObject.name}");
-        if(image != null && !gameState.isBankerPresentingAnOffer)
+        if(image != null && !gameState.isBankerPresentingAnOffer && !gameState.isGameOver)
         {
             image.color = originalColor;
         }
@@ -90,7 +93,7 @@ public class SuitcaseEventTrigger : EventTrigger
         else
         {
             // Open Suitcase Event
-            if (!gameState.isBankerPresentingAnOffer && suitcaseDisplay.transform.Find("Closed").gameObject.activeInHierarchy)
+            if (!gameState.isBankerPresentingAnOffer && !gameState.isGameOver && suitcaseDisplay.transform.Find("Closed").gameObject.activeInHierarchy)
             {
                 banker.DecrementSuitcaseCount();
                 banker.ReduceTotalMoneyAmount(suitcaseDisplay.suitcase.moneyAmount);
@@ -98,9 +101,13 @@ public class SuitcaseEventTrigger : EventTrigger
                 suitcaseDisplay.transform.Find("Closed").gameObject.SetActive(false);
                 ++gameState.currentSuitcasesOpenedCount;
                 ++gameState.totalSuitcasesOpened;
+
+                MoneyDisplay scoreDisplay = scoreboardPanel.GetComponent<Scoreboard>().Displays
+                    .FirstOrDefault(display => display.moneyAmount == suitcaseDisplay.suitcase.moneyAmount);
+                scoreDisplay.FadeoutDisplay();
             }
 
-            if (!gameState.isBankerPresentingAnOffer && GameConstants.casesToOpenPerRound[gameState.currentRoundNumber] <= gameState.currentSuitcasesOpenedCount)
+            if (!gameState.isBankerPresentingAnOffer && !gameState.isGameOver && GameConstants.casesToOpenPerRound[gameState.currentRoundNumber] <= gameState.currentSuitcasesOpenedCount)
             {
                 // Present Banker Offer Event
                 gameState.currentBankerOffer = banker.CalculateOffer(GameConstants.bankerOfferPercentagesPerRound[gameState.currentRoundNumber]);
