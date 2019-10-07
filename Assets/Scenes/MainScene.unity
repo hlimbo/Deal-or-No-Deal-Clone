@@ -3924,7 +3924,7 @@ PrefabInstance:
     - target: {fileID: 4661366925148112266, guid: 03b57da124e86b949a5e39983e9fd858,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 268.40002
+      value: 226.5
       objectReference: {fileID: 0}
     - target: {fileID: 4661366925148112266, guid: 03b57da124e86b949a5e39983e9fd858,
         type: 3}
@@ -4039,6 +4039,46 @@ PrefabInstance:
     - target: {fileID: 4661366924595035213, guid: 03b57da124e86b949a5e39983e9fd858,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923357219612, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923357219612, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923357219612, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923357219612, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923868543424, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923868543424, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923868543424, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4661366923868543424, guid: 03b57da124e86b949a5e39983e9fd858,
+        type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5011,7 +5051,7 @@ PrefabInstance:
     - target: {fileID: 5365781450426906915, guid: 3d8a1218bd2d152499c96091261c7ff0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 122.45
+      value: 77.000015
       objectReference: {fileID: 0}
     - target: {fileID: 5365781450426906915, guid: 3d8a1218bd2d152499c96091261c7ff0,
         type: 3}
